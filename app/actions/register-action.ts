@@ -6,12 +6,12 @@ import { RegisterInput, registerSchema } from "@/validation/register"
 import { Prisma } from "@/app/generated/prisma/client"
 
 export const registerUser = async (values : RegisterInput) => {
-    const validatedFilleds = registerSchema.safeParse(values)
-    if(!validatedFilleds.success) {
-        return { error: "Invalid product data" }
+    const result = registerSchema.safeParse(values)
+    if(!result.success) {
+        return { error: "Invalid user data" }
     }
     
-    const { name, email, password, confirmPassword } = validatedFilleds.data
+    const { name, email, password, confirmPassword } = result.data
     
     if(password !== confirmPassword) {
         return { error: "Passwords do not match" }
