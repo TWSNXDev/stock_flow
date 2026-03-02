@@ -1,22 +1,15 @@
-import AdminNavbar from "@/components/AdminNavbar";
-import AdminSidebar from "@/components/AdminSidebar";
+import AdminLayout from "@/components/layout/AdminLayout";
 
-export default function AdminLayout({
+export default function AdminRootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body>
-                <div className="flex">
-                    <AdminSidebar />
-                    <div className="flex-1 p-4">
-                        <AdminNavbar />
-                        {children}
-                    </div>
-                </div>
-            </body>
-        </html>
+        <AdminLayout>
+            <div className="container mx-auto py-4">
+                {children}
+            </div>
+        </AdminLayout>
     );
 }

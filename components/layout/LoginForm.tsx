@@ -1,5 +1,5 @@
 "use client"
-import FloatingInput from '@/components/FloatingInput'
+import FloatingInput from '@/components/ui/FloatingInput'
 import { LoginInput, loginSchema } from '@/validation/login'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
