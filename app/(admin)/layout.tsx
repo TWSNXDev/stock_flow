@@ -7,7 +7,7 @@ export default function AdminRootLayout({
 }>) {
     return (
         <AdminLayout>
-            <div className="container mx-auto py-4">
+            <div className="container mx-auto px-2 sm:px-4 lg:px-6 py-2 sm:py-4">
                 {children}
             </div>
         </AdminLayout>

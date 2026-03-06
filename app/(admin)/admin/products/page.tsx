@@ -1,12 +1,24 @@
-import { Package, Pencil, Trash2, Search, Filter } from "lucide-react";
-import CreateProductForm from "./_components/CreateProductForm";
-import { getProducts } from "@/app/actions/product-action";
+import { Package } from "lucide-react";
+import { getFilteredProducts, getInventoryStats } from "@/app/actions/product-action";
+import DeleteButton from "./_components/DeleteButton";
+import ProductForm from "./_components/ProductForm";
+import SearchFilter from "./_components/SearchFilter";
+import FilterDropdown from "./_components/FilterDropdown";
+import PaginationControls from "./_components/PaginationControls";
+import PageSizeSelector from "./_components/PageSizeSelector";
+import Image from "next/image";
 
-export default async function ProductPage() {
-    const data = await getProducts()
-    console.log("Products:", data)
+export default async function ProductPage({ searchParams }: { searchParams: Promise<{ page?: string; size?: string; query?: string; stock?: string; sort?: string }> }) {
+    const { page,size, query, stock, sort } = await searchParams;
+    const pageSize = Number(size) || 2;
+    const currentPage = Number(page) || 1;
+    const skip = (currentPage - 1) * pageSize;
+    const inventoryStatus = await getInventoryStats();
+    const data = await getFilteredProducts({ query, stock, sort, pageSize, skip });
+
+    const products = data.products || [];
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
@@ -18,7 +30,7 @@ export default async function ProductPage() {
                         <p className="text-sm text-gray-500">Manage your product inventory</p>
                     </div>
                 </div>
-                <CreateProductForm />
+                <ProductForm />
             </div>
 
             {/* Stats Cards */}
@@ -28,7 +40,7 @@ export default async function ProductPage() {
                         <Package className="size-5 text-blue-600" />
                     </div>
                     <div>
-                        <p className="text-2xl font-bold text-gray-900">24</p>
+                        <p className="text-2xl font-bold text-gray-900">{inventoryStatus.totalItems}</p>
                         <p className="text-xs text-gray-500">Total Products</p>
                     </div>
                 </div>
@@ -37,7 +49,7 @@ export default async function ProductPage() {
                         <Package className="size-5 text-green-600" />
                     </div>
                     <div>
-                        <p className="text-2xl font-bold text-gray-900">18</p>
+                        <p className="text-2xl font-bold text-gray-900">{inventoryStatus.inStock}</p>
                         <p className="text-xs text-gray-500">In Stock</p>
                     </div>
                 </div>
@@ -46,28 +58,20 @@ export default async function ProductPage() {
                         <Package className="size-5 text-red-600" />
                     </div>
                     <div>
-                        <p className="text-2xl font-bold text-gray-900">6</p>
+                        <p className="text-2xl font-bold text-gray-900">{inventoryStatus.outOfStock}</p>
                         <p className="text-xs text-gray-500">Out of Stock</p>
                     </div>
                 </div>
             </div>
 
             {/* Table Card */}
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
                 {/* Table Toolbar */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100">
-                    <div className="relative max-w-xs w-full">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Search products..."
-                            className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary hover:border-gray-300 transition-all outline-none bg-gray-50/50 focus:bg-white"
-                        />
-                    </div>
-                    <button className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all">
-                        <Filter className="size-4" />
-                        Filters
-                    </button>
+                    <SearchFilter />
+                    <div className="flex items-center gap-2">
+                        <PageSizeSelector />
+                        <FilterDropdown /></div>
                 </div>
 
                 {/* Table */}
@@ -83,56 +87,49 @@ export default async function ProductPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                            {data.products ? data.products.map((product) => (
+                            {products?.length ? products.map((product) => (
                                 <tr key={product.id} className="hover:bg-gray-50/60 transition-colors">
                                     <td className="px-5 py-4">
                                         <div className="flex items-center gap-3">
                                             <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center">
-                                                <Package className="size-4 text-gray-400" />
+                                                {product.imageUrl ? <Image width={36} height={36} src={product.imageUrl} alt={product.name} className="w-9 h-9 rounded-lg object-cover" /> : <Package className="size-4 text-gray-400" />}
                                             </div>
-                                        <span className="text-sm font-medium text-gray-900">{product.name}</span>
-                                    </div>
-                                </td>
-                                <td className="px-5 py-4">
-                                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
-                                        {product.description}
-                                    </span>
-                                </td>
-                                <td className="px-5 py-4 text-sm font-semibold text-gray-900">฿{product.price.toString()}</td>
-                                <td className="px-5 py-4">
-                                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
-                                        {product.stock} in stock
-                                    </span>
-                                </td>
-                                <td className="px-5 py-4">
-                                    <div className="flex items-center justify-center gap-2">
-                                        <button className="p-2 rounded-lg text-gray-400 hover:text-amber-600 hover:bg-amber-50 transition-all" title="Edit">
-                                            <Pencil className="size-4" />
-                                        </button>
-                                        <button className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all" title="Delete">
-                                            <Trash2 className="size-4" />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>)) : <tr><td colSpan={5} className="px-5 py-4 text-center text-sm text-gray-500">No products found.</td></tr>}
+                                            <span className="text-sm font-medium text-gray-900">{product.name}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-5 py-4">
+                                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                                            {product.description}
+                                        </span>
+                                    </td>
+                                    <td className="px-5 py-4 text-sm font-semibold text-gray-900">฿{product.price.toString()}</td>
+                                    <td className="px-5 py-4">
+                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${product.stock > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                                            {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                                        </span>
+                                    </td>
+                                    <td className="px-5 py-4">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <ProductForm initialData={{
+                                                id: product.id,
+                                                name: product.name,
+                                                description: product.description,
+                                                price: Number(product.price),
+                                                stock: product.stock,
+                                                imageUrl: product.imageUrl
+                                            }} />
+                                            <DeleteButton productId={product.id} />
+                                        </div>
+                                    </td>
+                                </tr>)) : <tr><td colSpan={5} className="px-5 py-4 text-center text-sm text-gray-500">No products found.</td></tr>}
                         </tbody>
                     </table>
                 </div>
 
                 {/* Table Footer */}
-                <div className="flex items-center justify-between px-5 py-3 border-t border-gray-100 bg-gray-50/50">
-                    <p className="text-xs text-gray-500">Showing {data.products ? data.products.length > 0 ? `1 of ${data.products.length}` : 0 : 0} products</p>
-                    <div className="flex items-center gap-1">
-                        <button className="px-3 py-1.5 text-xs font-medium text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                            Previous
-                        </button>
-                        <button className="px-3 py-1.5 text-xs font-medium text-white bg-primary rounded-lg transition-colors">
-                            1
-                        </button>
-                        <button className="px-3 py-1.5 text-xs font-medium text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                            Next
-                        </button>
-                    </div>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-3 sm:px-5 py-3 border-t border-gray-100 bg-gray-50/50">
+                    <p className="text-xs text-gray-500">Showing {products ? products.length > 0 ? `${products.length} of ${data.totalCount}` : 0 : 0} products</p>
+                    <PaginationControls hasNextPage={currentPage < Math.ceil(Number(data.totalCount) / pageSize)} hasPrevPage={currentPage > 1} currentPage={currentPage} />
                 </div>
             </div>
         </div>

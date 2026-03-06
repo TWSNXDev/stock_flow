@@ -11,7 +11,7 @@ const menuItems = [
     href: "/admin/products",
     label: "Products",
     icon: Package,
-    hasSubmenu: true,
+    hasSubmenu: false,
     submenu: [
       { href: "/admin/products", label: "All Products", icon: ListChecks },
       { href: "/admin/products/create", label: "Add Product", icon: Plus },
@@ -19,7 +19,7 @@ const menuItems = [
   },
 ];
 
-export default function AdminSidebar({ isOpen }: { isOpen: boolean }) {
+export default function AdminSidebar({ isOpen, isMobile = false }: { isOpen: boolean; isMobile?: boolean }) {
   const pathname = usePathname();
   const [expandedSubmenu, setExpandedSubmenu] = useState<string | null>("/admin/products");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -29,13 +29,14 @@ export default function AdminSidebar({ isOpen }: { isOpen: boolean }) {
     setExpandedSubmenu(expandedSubmenu === href ? null : href);
   };
 
-  const shouldExpand = isOpen || isSidebarHovered;
+  // On mobile, always show expanded when open
+  const shouldExpand = isMobile ? true : (isOpen || isSidebarHovered);
 
   return (
     <aside 
-      onMouseEnter={() => setIsSidebarHovered(true)}
-      onMouseLeave={() => setIsSidebarHovered(false)}
-      className={`${shouldExpand ? "w-64" : "w-20"} bg-neutral-950 h-screen flex flex-col border-r border-neutral-800/60 transition-all duration-300`}>
+      onMouseEnter={() => !isMobile && setIsSidebarHovered(true)}
+      onMouseLeave={() => !isMobile && setIsSidebarHovered(false)}
+      className={`${shouldExpand ? "w-64" : "w-20"} bg-neutral-950 min-h-screen h-full flex flex-col border-r border-neutral-800/60 transition-all duration-300`}>
       {/* Logo */}
       <div className={`pt-6 pb-8 transition-all duration-300 ${shouldExpand ? "px-6" : "px-3"}`}>
         <div className={`flex items-center rounded-lg p-2 transition-all duration-300 ${shouldExpand ? "gap-3" : "justify-center"}`}>
@@ -98,7 +99,7 @@ export default function AdminSidebar({ isOpen }: { isOpen: boolean }) {
                   onMouseEnter={() => !shouldExpand && setHoveredItem(item.href)}
                   onMouseLeave={() => setHoveredItem(null)}
                   onClick={() => handleSubmenuToggle(item.href)}
-                  className={`group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  className={`group relative cursor-pointer w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                     isActive
                       ? "bg-primary text-white shadow-lg shadow-primary/20"
                       : "text-neutral-400 hover:bg-white/5 hover:text-white"

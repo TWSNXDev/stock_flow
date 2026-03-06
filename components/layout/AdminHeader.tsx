@@ -21,7 +21,7 @@ export default function AdminHeader({ onToggleSidebar }: { onToggleSidebar: () =
     }, []);
 
     return (
-        <header className="sticky top-0 z-40 flex items-center justify-between bg-linear-to-r from-slate-50 to-slate-100 border-b border-slate-200 px-6 py-4 shadow-sm">
+        <header className="sticky top-0 z-30 flex items-center justify-between bg-linear-to-r from-slate-50 to-slate-100 border-b border-slate-200 px-3 sm:px-6 py-3 sm:py-4 shadow-sm gap-2">
             <div className="flex gap-2">
                 {/* Hamburger Menu */}
                 <button onClick={() => onToggleSidebar()} className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-200 transition-colors duration-200 focus:outline-none cursor-pointer">

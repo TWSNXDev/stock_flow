@@ -33,7 +33,6 @@ function LoginForm() {
                 ...data,
                 redirect: false,
             })
-            console.log("SignIn response:", res)
             if(res?.error) {
                 if(res.status === 401) {
                     setError("Invalid email or password")
