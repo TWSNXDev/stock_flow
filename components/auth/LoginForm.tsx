@@ -11,7 +11,7 @@ function LoginForm() {
     const router = useRouter()
     const [error, setError] = useState<string | null>(null)
     const [message, setMessage] = useState<string | null>(null)
-    const { register,handleSubmit,reset , formState: { errors , isSubmitting} } = useForm({
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
         defaultValues: {
             email: "",
             password: "",
@@ -24,29 +24,27 @@ function LoginForm() {
         setError(null)
         setMessage(null)
         const validatedFields = loginSchema.safeParse(data)
-        if(!validatedFields.success) {
+        if (!validatedFields.success) {
             setError("Invalid login data")
             return
         }
-        try{
-            const res = await signIn("credentials",{
+        try {
+            const res = await signIn("credentials", {
                 ...data,
                 redirect: false,
             })
-            if(res?.error) {
-                if(res.status === 401) {
+            if (res?.error) {
+                if (res.status === 401) {
                     setError("Invalid email or password")
-                } else {                    
+                } else {
                     setError(res.error)
                 }
             } else {
                 setMessage("Login successful! Redirecting...")
                 reset()
-                setTimeout(() => {
-                    router.push("/")
-                }, 1500)
+                router.push("/")
             }
-        }catch(error) {
+        } catch (error) {
             console.error("Login error:", error)
             setError("An error occurred during login")
             return

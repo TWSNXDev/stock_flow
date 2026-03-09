@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, ChevronRight, ListChecks, Plus } from "lucide-react";
+import { LayoutDashboard, Package, ChevronRight, ListChecks, Plus, Tag } from "lucide-react";
 
 const menuItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -17,6 +17,7 @@ const menuItems = [
       { href: "/admin/products/create", label: "Add Product", icon: Plus },
     ],
   },
+  { href: "/admin/categories", label: "Categories", icon: Tag },
 ];
 
 export default function AdminSidebar({ isOpen, isMobile = false }: { isOpen: boolean; isMobile?: boolean }) {

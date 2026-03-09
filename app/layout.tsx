@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "./Provider";
+import Navbar from "@/components/layout/Navbar";
 
 const roboto = Roboto({
   subsets: ["latin"],

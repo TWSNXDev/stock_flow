@@ -62,28 +62,36 @@ enum Role {
 // --- E-commerce & Stock Models ---
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
   description String?
-  price       Decimal  @db.Decimal(10, 2)
-  stock       Int      @default(0)
+  price       Decimal     @db.Decimal(10, 2)
+  stock       Int         @default(0)
   imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   orderItems  OrderItem[]
+  categoryId  String?
+  category    Category?   @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  products Product[]
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  userId          String
-  user            User        @relation(fields: [userId], references: [id])
-  items           OrderItem[]
-  totalAmount     Decimal     @db.Decimal(10, 2)
-  status          OrderStatus @default(PENDING)
-  address         String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  notifications   Notification[]
+  id            String         @id @default(cuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  items         OrderItem[]
+  totalAmount   Decimal        @db.Decimal(10, 2)
+  status        OrderStatus    @default(PENDING)
+  address       String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  notifications Notification[]
 }
 
 enum OrderStatus {
@@ -109,7 +117,7 @@ model Notification {
   orderId   String?
   order     Order?   @relation(fields: [orderId], references: [id])
   message   String
-  type      String   //"EMAIL", "LINE", "IN_APP"
+  type      String //"EMAIL", "LINE", "IN_APP"
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 }

@@ -3,8 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Menu, Search, ChevronDown, User, Settings, LogOut } from "lucide-react";
 import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
 
 export default function AdminHeader({ onToggleSidebar }: { onToggleSidebar: () => void }) {
+    const { data: session } = useSession();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
 
@@ -60,8 +62,8 @@ export default function AdminHeader({ onToggleSidebar }: { onToggleSidebar: () =
                         <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
                     </div>
                     <div className="hidden sm:block text-left">
-                        <p className="font-semibold text-sm text-slate-800 leading-tight">Admin</p>
-                        <p className="text-[11px] text-slate-500 leading-tight">Developer</p>
+                        <p className="font-semibold text-sm text-slate-800 leading-tight">{session?.user?.name}</p>
+                        <p className="text-[11px] text-slate-500 leading-tight">{session?.user?.role}</p>
                     </div>
                     <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ease-in-out ${isProfileOpen ? "rotate-180" : ""}`} />
                 </button>
@@ -84,21 +86,21 @@ export default function AdminHeader({ onToggleSidebar }: { onToggleSidebar: () =
                                 />
                             </div>
                             <div>
-                                <p className="font-bold text-sm drop-shadow-sm">Admin</p>
-                                <p className="text-[11px] text-blue-100">admin@example.com</p>
+                                <p className="font-bold text-sm drop-shadow-sm">{session?.user?.name}</p>
+                                <p className="text-[11px] text-blue-100">{session?.user?.email}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Menu Items */}
                     <div className="py-2 px-2">
-                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group/item">
+                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 rounded-xl cursor-pointer hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group/item">
                             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 group-hover/item:bg-blue-100 transition-colors duration-200">
                                 <User className="w-4 h-4 text-slate-500 group-hover/item:text-blue-600 transition-colors duration-200" />
                             </div>
                             <span className="font-medium">Profile</span>
                         </button>
-                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group/item">
+                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 rounded-xl cursor-pointer hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 group/item">
                             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 group-hover/item:bg-blue-100 transition-colors duration-200">
                                 <Settings className="w-4 h-4 text-slate-500 group-hover/item:text-blue-600 transition-colors duration-200" />
                             </div>
@@ -109,7 +111,7 @@ export default function AdminHeader({ onToggleSidebar }: { onToggleSidebar: () =
                     <div className="mx-4 h-px bg-linear-to-r from-transparent via-slate-200 to-transparent"></div>
 
                     <div className="py-2 px-2">
-                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 rounded-xl hover:bg-red-50 transition-all duration-200 group/item">
+                        <button onClick={() => signOut()} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 rounded-xl cursor-pointer hover:bg-red-50 transition-all duration-200 group/item">
                             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover/item:bg-red-100 transition-colors duration-200">
                                 <LogOut className="w-4 h-4" />
                             </div>

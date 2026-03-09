@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export default async function ProductPage({ searchParams }: { searchParams: Promise<{ page?: string; size?: string; query?: string; stock?: string; sort?: string }> }) {
     const { page,size, query, stock, sort } = await searchParams;
-    const pageSize = Number(size) || 2;
+    const pageSize = Number(size) || 10;
     const currentPage = Number(page) || 1;
     const skip = (currentPage - 1) * pageSize;
     const inventoryStatus = await getInventoryStats();

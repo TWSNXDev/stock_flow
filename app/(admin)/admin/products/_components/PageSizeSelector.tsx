@@ -22,11 +22,11 @@ export default function PageSizeSelector() {
             <select
                 id="pageSize"
                 name="pageSize"
-                defaultValue={new URLSearchParams(searchParams.toString()).get('size') || '2'}
+                defaultValue={new URLSearchParams(searchParams.toString()).get('size') || '10'}
                 onChange={handlePageSizeChange}
                 className="px-4 py-2 rounded-md border border-gray-300 appearance-none text-center text-sm outline-none cursor-pointer"
             >
-                <option value="2">2</option>
+                <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
