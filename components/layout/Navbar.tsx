@@ -15,13 +15,17 @@ import {
   ChevronDown,
   Package,
 } from "lucide-react";
+import { useCartStore } from "@/store/useCartStore";
+import CartDrawer from "@/components/shop/CartDrawer";
 
 export default function Navbar() {
   const { data: session } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const cartCount = useCartStore((s) => s.items.reduce((sum, item) => sum + item.quantity, 0));
 
   // Close user dropdown on outside click
   useEffect(() => {
@@ -41,6 +45,7 @@ export default function Navbar() {
   ];
 
   return (
+    <>
     <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-neutral-200 shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
@@ -93,17 +98,18 @@ export default function Navbar() {
             </button>
 
             {/* Cart */}
-            <Link
-              href="/cart"
-              className="relative flex h-9 w-9 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-primary"
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative flex h-9 w-9 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-primary cursor-pointer"
               aria-label="Cart"
             >
               <ShoppingCart size={20} />
-              {/* Badge – replace 0 with real cart count */}
-              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-error text-[10px] font-bold text-white">
-                0
-              </span>
-            </Link>
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-error text-[10px] font-bold text-white">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </button>
 
             {/* ── User Area ── */}
             {session?.user ? (
@@ -264,6 +270,9 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </header>
+      </header>
+
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+    </>
   );
 }

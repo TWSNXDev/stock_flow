@@ -1,19 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, Zap } from "lucide-react";
+import AddToCartButton from "./AddToCartButton";
+import { ProductType } from "@/validation/product";
 
-type Product = {
-  id: string;
-  name: string;
-  description: string | null;
-  price: { toString(): string };
-  stock: number;
-  imageUrl: string | null;
-};
-
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product }: { product: ProductType }) {
   const price = Number(product.price);
-  const inStock = product.stock > 0;
+  const inStock = Number(product.stock) > 0;
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-lg border border-neutral-200 bg-surface transition-all hover:shadow-md hover:-translate-y-0.5">
@@ -77,17 +70,11 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2 pt-2">
+        <div className="flex flex-col gap-2 pt-2">
+          <AddToCartButton product={product} />
           <button
             disabled={!inStock}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg cursor-pointer border border-primary py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary-light disabled:border-neutral-200 disabled:text-neutral-300 disabled:cursor-not-allowed"
-          >
-            <ShoppingCart size={14} />
-            Add to Cart
-          </button>
-          <button
-            disabled={!inStock}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg cursor-pointer bg-primary py-2 text-xs font-semibold text-white transition-colors hover:bg-primary-hover disabled:bg-neutral-200 disabled:text-neutral-400 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-1.5 rounded-lg cursor-pointer bg-primary py-2 text-xs font-semibold text-white transition-colors hover:bg-primary-hover disabled:bg-neutral-200 disabled:text-neutral-400 disabled:cursor-not-allowed"
           >
             <Zap size={14} />
             Buy Now
@@ -98,7 +85,7 @@ export default function ProductCard({ product }: { product: Product }) {
   );
 }
 
-function isNew(product: { id: string; [key: string]: unknown }): boolean {
+function isNew(product: ProductType): boolean {
   // Products with createdAt within 7 days are "new"
   const createdAt = (product as { createdAt?: Date | string }).createdAt;
   if (!createdAt) return false;

@@ -113,7 +113,7 @@ export default async function ProductPage({ searchParams }: { searchParams: Prom
                                             <ProductForm initialData={{
                                                 id: product.id,
                                                 name: product.name,
-                                                description: product.description,
+                                                description: product.description || undefined,
                                                 price: Number(product.price),
                                                 stock: product.stock,
                                                 imageUrl: product.imageUrl

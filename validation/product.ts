@@ -49,7 +49,7 @@ export const productServerSchema = z.object({
 export interface ProductType {
   id: string;
   name: string;
-  description: string | null;
+  description?: string;
   price: number;
   stock: number;
   imageUrl: string | null;
