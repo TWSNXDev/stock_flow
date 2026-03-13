@@ -24,6 +24,7 @@ export const registerUser = async (values : RegisterInput) => {
                 name,
                 email,
                 password: passwordHashed,
+                role: "USER"
             }
         })
         return { message: "User created successfully" }

@@ -1,6 +1,6 @@
 "use client"
 
-import FloatingInput from "@/components/FloatingInput"
+import FloatingInput from "@/components/ui/FloatingInput"
 import { registerUser } from "@/app/actions/register-action"
 import { RegisterInput, registerSchema } from "@/validation/register"
 import { zodResolver } from "@hookform/resolvers/zod"
