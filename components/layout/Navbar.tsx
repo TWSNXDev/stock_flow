@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import { useState, useRef, useEffect } from "react";
+import AuthLink from "@/components/auth/AuthLink";
+import CartDrawer from "@/components/shop/CartDrawer";
+import { useCartStore } from "@/store/useCartStore";
 import {
   ShoppingCart,
   Search,
@@ -15,8 +14,9 @@ import {
   ChevronDown,
   Package,
 } from "lucide-react";
-import { useCartStore } from "@/store/useCartStore";
-import CartDrawer from "@/components/shop/CartDrawer";
+import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -159,18 +159,18 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-2">
-                <Link
-                  href="/login"
+                <AuthLink
+                  mode="login"
                   className="rounded-lg px-4 py-2 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100"
                 >
                   Login
-                </Link>
-                <Link
-                  href="/register"
+                </AuthLink>
+                <AuthLink
+                  mode="register"
                   className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                 >
                   Register
-                </Link>
+                </AuthLink>
               </div>
             )}
 
@@ -251,20 +251,20 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <Link
-                  href="/login"
+                <AuthLink
+                  mode="login"
                   onClick={() => setMobileOpen(false)}
                   className="rounded-lg border border-neutral-200 px-4 py-2.5 text-center text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100"
                 >
                   Login
-                </Link>
-                <Link
-                  href="/register"
+                </AuthLink>
+                <AuthLink
+                  mode="register"
                   onClick={() => setMobileOpen(false)}
                   className="rounded-lg bg-primary px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                 >
                   Register
-                </Link>
+                </AuthLink>
               </div>
             )}
           </div>

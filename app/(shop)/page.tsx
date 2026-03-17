@@ -1,6 +1,7 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import ProductCard from "@/components/shop/ProductCard";
+import { ProductType } from "@/validation/product";
 import {
   Truck,
   ShieldCheck,
@@ -149,7 +150,7 @@ export default async function Home() {
         {latestProducts.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 sm:gap-6">
             {latestProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={toProductCardData(product)} />
             ))}
           </div>
         ) : (
@@ -195,7 +196,7 @@ export default async function Home() {
 
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
               {popularProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={toProductCardData(product)} />
               ))}
             </div>
           </div>
@@ -236,4 +237,26 @@ export default async function Home() {
       </section>
     </div>
   );
+}
+
+function toProductCardData(product: {
+  id: string;
+  name: string;
+  description: string | null;
+  price: { toString(): string } | number;
+  stock: number;
+  imageUrl: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}): ProductType {
+  return {
+    id: product.id,
+    name: product.name,
+    description: product.description ?? undefined,
+    price: Number(product.price),
+    stock: Number(product.stock),
+    imageUrl: product.imageUrl,
+    createdAt: product.createdAt.toISOString(),
+    updatedAt: product.updatedAt.toISOString(),
+  };
 }

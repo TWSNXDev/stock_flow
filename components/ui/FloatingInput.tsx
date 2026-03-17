@@ -12,7 +12,7 @@ const FloatingInput = <T extends FieldValues>({ label, name, register, type = "t
 
     const inputStyle = `border border-neutral-200 p-2 rounded-md outline-none focus:border-primary w-full peer`
 
-    const labelStyle = `absolute left-1 text-neutral-500 px-2 origin-top-left transform duration-300 bg-neutral-100 pointer-events-none
+    const labelStyle = `absolute left-1 text-neutral-500 px-2 origin-top-left transform duration-300 bg-white pointer-events-none
                     peer-placeholder-shown:translate-y-2 peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:scale-75
                     peer-focus:-translate-y-2.5 peer-focus:text-primary peer-focus:scale-75`
 

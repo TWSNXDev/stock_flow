@@ -1,3 +1,4 @@
+import AuthModal from "@/components/auth/AuthModal";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
@@ -11,6 +12,7 @@ export default function ShopLayout({
             <Navbar />
             {children}
             <Footer />
+            <AuthModal />
         </div>
     )
 }
